@@ -25,15 +25,15 @@ jogo5 = Jogo('Beyond', 'Suspense', 'Playstation 4')
 jogo6 = Jogo('Battlefield', 'Ação', 'Playstation 4, Xbox One e PC')
 lista = [jogo1, jogo2, jogo3, jogo4, jogo5, jogo6]
 
-@app.route('/inicio')
-def ola():
+@app.route('/')
+def index():
     return render_template('lista.html', titulo = 'Jogos', jogos = lista) #transformando o titulo em algo dinamico
 
 @app.route('/cadastro')
 def cadastro():
     return render_template('novo.html', titulo = 'Cadastro Novo Jogo:' )
 
-@app.route('/criar')
+@app.route('/criar', methods = ['POST',])
 def criar():
     nome = request.form['nome']
     categoria = request.form['categoria']
@@ -42,5 +42,5 @@ def criar():
     lista.append(jogo)
     return render_template('lista.html', titulo ='Jogos', jogos = lista)
 
-app.run()
+app.run(debug = True)
 
