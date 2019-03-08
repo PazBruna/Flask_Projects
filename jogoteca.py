@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__) #import name
 
@@ -31,7 +31,7 @@ def index():
 
 @app.route('/cadastro')
 def cadastro():
-    return render_template('novo.html', titulo = 'Cadastro Novo Jogo:' )
+    return render_template('novo.html', titulo = 'Cadastre um novo jogo:' )
 
 @app.route('/criar', methods = ['POST',])
 def criar():
@@ -40,7 +40,7 @@ def criar():
     console = request.form['console']
     jogo = Jogo(nome, categoria, console)
     lista.append(jogo)
-    return render_template('lista.html', titulo ='Jogos', jogos = lista)
+    return redirect('/')
 
 app.run(debug = True)
 
