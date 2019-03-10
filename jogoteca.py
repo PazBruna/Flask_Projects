@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, flash
 
 app = Flask(__name__) #import name
+app.secret_key = 'paz'
+
 
 class Jogo:
     def __init__(self, nome, categoria, console):
@@ -8,7 +10,7 @@ class Jogo:
         self.categoria = categoria
         self.console = console
 
-    @property
+    @property 
     def nome(self):
         return self._nome
     
@@ -17,15 +19,15 @@ class Jogo:
         self._nome = novo_nome.title()
 
 
-jogo1 = Jogo('Detroit' , 'Ação', 'Playstation 4')
+jogo1 = Jogo('Detroit: Become Human' , 'Ação', 'Playstation 4')
 jogo2 = Jogo('The Witcher', 'Ação', 'Playstation 4')
 jogo3 = Jogo('Uncharted', 'Aventura', 'Playstation 4 e Xbox One')
 jogo4 = Jogo('Tomb Raider', 'Aventura', 'Playstation 4, Xbox One')
-jogo5 = Jogo('Beyond', 'Suspense', 'Playstation 4')
-jogo6 = Jogo('Battlefield', 'Ação', 'Playstation 4, Xbox One e PC')
+jogo5 = Jogo('Beyond Two Souls', 'Suspense', 'Playstation 4')
+jogo6 = Jogo('BattleField', 'Ação', 'Playstation 4, Xbox One e PC')
 lista = [jogo1, jogo2, jogo3, jogo4, jogo5, jogo6]
 
-@app.route('/')
+@app.route('/lista')
 def index():
     return render_template('lista.html', titulo = 'Jogos', jogos = lista) #transformando o titulo em algo dinamico
 
@@ -40,18 +42,21 @@ def criar():
     console = request.form['console']
     jogo = Jogo(nome, categoria, console)
     lista.append(jogo)
-    return redirect('/')
+    return redirect('/lista')
 
-@app.route('/login')
+@app.route('/')
 def login():
     return render_template('login.html')
 
 @app.route('/autenticar', methods =['POST'])
 def autenticar():
     if 'mestra' == request.form['senha']:
-        return redirect('/')
+        session['usuario_logado'] = request.form['usuario']
+        flash(request.form['usuario'] + ' logou com sucesso')
+        return redirect('/lista')
     else:
-        return redirect('/login')
+        flash('Senha e/ou email Incorreto')
+        return redirect('/')
 
 app.run(debug = True)
 
